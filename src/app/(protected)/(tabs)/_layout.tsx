@@ -3,7 +3,7 @@ import { Tabs } from 'expo-router'
 
 export default function TabsLayout() {
   return (
-    <Tabs screenOptions={{ tabBarShowLabel: false }}>
+    <Tabs screenOptions={{ tabBarShowLabel: false, headerTitleAlign: 'center' }}>
       <Tabs.Screen
         name='index'
         options={{
@@ -27,9 +27,9 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name='profile'
+        name='notifications'
         options={{
-          title: 'Profile',
+          title: 'Notifications',
           tabBarIcon: ({ focused, size, color }) => (
             <Octicons
               name={focused ? 'heart-fill' : 'heart'}
@@ -40,9 +40,9 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name='notifications'
+        name='profile'
         options={{
-          title: 'Notifications',
+          title: 'Profile',
           tabBarIcon: ({ focused, size, color }) => (
             <Octicons
               name={focused ? 'person-fill' : 'person'}

@@ -1,8 +1,8 @@
+import { View, Text, Image, Pressable } from 'react-native'
 import { Post } from '@/types'
+import { Ionicons } from '@expo/vector-icons'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { Ionicons } from '@expo/vector-icons'
-import { Image, Text, View, Pressable } from 'react-native'
 
 dayjs.extend(relativeTime)
 
@@ -17,7 +17,7 @@ export default function PostListItem({ post }: { post: Post }) {
         />
       </View>
 
-      {/* Post Content */}
+      {/* Content */}
       <View className='flex-1'>
         {/* User Info */}
         <View className='flex-row items-center'>
@@ -41,9 +41,7 @@ export default function PostListItem({ post }: { post: Post }) {
 
           <Pressable className='flex-row items-center'>
             <Ionicons name='chatbubble-outline' size={20} color='#d1d5db' />
-            <Text className='text-gray-300 ml-2'>
-              {post.replies.length || 0}
-            </Text>
+            <Text className='text-gray-300 ml-2'>{post.replies.length}</Text>
           </Pressable>
 
           <Pressable className='flex-row items-center'>
