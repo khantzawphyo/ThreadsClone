@@ -1,17 +1,19 @@
-import { Feather } from '@expo/vector-icons'
+import { Octicons } from '@expo/vector-icons'
 import { Tabs } from 'expo-router'
 
 export default function TabsLayout() {
   return (
-    <Tabs
-      screenOptions={{ tabBarShowLabel: false }}
-    >
+    <Tabs screenOptions={{ tabBarShowLabel: false }}>
       <Tabs.Screen
         name='index'
         options={{
           title: 'Home',
-          tabBarIcon: ({ size, color }) => (
-            <Feather name='home' size={size} color={color} />
+          tabBarIcon: ({ focused, size, color }) => (
+            <Octicons
+              name={focused ? 'home-fill' : 'home'}
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -20,7 +22,7 @@ export default function TabsLayout() {
         options={{
           title: 'Search',
           tabBarIcon: ({ size, color }) => (
-            <Feather name='search' size={size} color={color} />
+            <Octicons name='search' size={size} color={color} />
           ),
         }}
       />
@@ -28,8 +30,12 @@ export default function TabsLayout() {
         name='profile'
         options={{
           title: 'Profile',
-          tabBarIcon: ({ size, color }) => (
-            <Feather name='heart' size={size} color={color} />
+          tabBarIcon: ({ focused, size, color }) => (
+            <Octicons
+              name={focused ? 'heart-fill' : 'heart'}
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -37,8 +43,12 @@ export default function TabsLayout() {
         name='notifications'
         options={{
           title: 'Notifications',
-          tabBarIcon: ({ size, color }) => (
-            <Feather name='user' size={size} color={color} />
+          tabBarIcon: ({ focused, size, color }) => (
+            <Octicons
+              name={focused ? 'person-fill' : 'person'}
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
