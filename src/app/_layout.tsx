@@ -1,3 +1,5 @@
+import '../../global.css'
+
 import { Slot, Stack, Tabs } from 'expo-router'
 import { ThemeProvider, DarkTheme } from '@react-navigation/native'
 
