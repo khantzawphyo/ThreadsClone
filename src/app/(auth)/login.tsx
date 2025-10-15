@@ -8,30 +8,43 @@ import {
   TouchableWithoutFeedback,
   Platform,
   Keyboard,
+  Alert,
+  ActivityIndicator,
 } from 'react-native'
 import { Link } from 'expo-router'
 import { useState } from 'react'
+import { supabase } from '@/lib/supabase'
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [focusedInput, setFocusedInput] = useState<'email' | 'password' | null>(
+    null
+  )
 
   const handleLogin = async () => {
     if (!email || !password) {
-      // TODO: Add proper error handling
+      Alert.alert('Please enter both email and password')
       return
     }
 
     try {
-      setIsLoading(true)
-      // TODO: Implement actual login logic here
-      console.log('Login attempt with:', { email })
+      setLoading(true)
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password: password,
+      })
+      if (error) Alert.alert(error.message)
     } catch (error) {
       console.error('Login error:', error)
-      // TODO: Add proper error handling
+      if (error instanceof Error) {
+        Alert.alert('Sign in error', error.message)
+      } else {
+        Alert.alert('Sign in error', 'An unexpected error occurred')
+      }
     } finally {
-      setIsLoading(false)
+      setLoading(false)
     }
   }
 
@@ -39,6 +52,7 @@ export default function LoginScreen() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
         className='flex-1 bg-neutral-950'
       >
         <View className='flex-1 items-center justify-center px-6'>
@@ -53,13 +67,22 @@ export default function LoginScreen() {
                   Email
                 </Text>
                 <TextInput
-                  className='w-full px-4 py-3 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:border-white'
+                  className={`w-full p-4 bg-neutral-900 border rounded-lg text-white ${
+                    focusedInput === 'email'
+                      ? 'border-2 border-white'
+                      : 'border border-neutral-700'
+                  }`}
                   placeholder='Enter your email'
                   placeholderTextColor='#6B7280'
                   keyboardType='email-address'
+                  textContentType='emailAddress'
+                  autoCorrect={false}
                   autoCapitalize='none'
                   value={email}
                   onChangeText={setEmail}
+                  onFocus={() => setFocusedInput('email')}
+                  onBlur={() => setFocusedInput(null)}
+                  editable={!loading}
                 />
               </View>
 
@@ -68,31 +91,55 @@ export default function LoginScreen() {
                   Password
                 </Text>
                 <TextInput
-                  className='w-full px-4 py-3 bg-neutral-900 border border-neutral-700 rounded-lg text-white focus:border-white'
+                  className={`w-full p-4 bg-neutral-900 border rounded-lg text-white ${
+                    focusedInput === 'password'
+                      ? 'border-2 border-white'
+                      : 'border border-neutral-700'
+                  }`}
                   placeholder='Enter your password'
                   placeholderTextColor='#6B7280'
                   secureTextEntry
+                  textContentType='password'
+                  autoCorrect={false}
                   value={password}
                   onChangeText={setPassword}
+                  onFocus={() => setFocusedInput('password')}
+                  onBlur={() => setFocusedInput(null)}
+                  editable={!loading}
                 />
               </View>
 
               <TouchableOpacity
-                className='w-full bg-white py-3 rounded-lg mt-6'
+                className={`w-full bg-white py-4 rounded-lg mt-6 ${
+                  loading ? 'opacity-50' : ''
+                }`}
                 activeOpacity={0.8}
                 onPress={handleLogin}
-                disabled={isLoading}
+                disabled={loading}
               >
-                <Text className='text-black text-center font-semibold'>
-                  {isLoading ? 'Logging in...' : 'Sign in'}
-                </Text>
+                {loading ? (
+                  <View className='flex-row justify-center items-center'>
+                    <ActivityIndicator color='#000' size='small' />
+                    <Text className='text-black font-semibold ml-2'>
+                      Logging in...
+                    </Text>
+                  </View>
+                ) : (
+                  <Text className='text-black text-center font-semibold'>
+                    Sign in
+                  </Text>
+                )}
               </TouchableOpacity>
 
               <View className='flex-row justify-center mt-4'>
                 <Text className='text-gray-400'>Don't have an account? </Text>
                 <Link href='/signup' asChild>
-                  <Pressable>
-                    <Text className='text-blue-400 font-medium'>
+                  <Pressable disabled={loading}>
+                    <Text
+                      className={`font-medium ${
+                        loading ? 'text-gray-500' : 'text-blue-400'
+                      }`}
+                    >
                       Create one
                     </Text>
                   </Pressable>

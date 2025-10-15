@@ -10,7 +10,7 @@ export default function HomeScreen() {
       renderItem={({ item }) => <PostListItem post={item} />}
       ListHeaderComponent={() => (
         <Link
-          href='/login'
+          href='/new'
           style={{
             color: '#3b82f6',
             textAlign: 'center',
@@ -18,7 +18,7 @@ export default function HomeScreen() {
             fontSize: 24,
           }}
         >
-          Login
+          New Post
         </Link>
       )}
     />
