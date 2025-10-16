@@ -1,33 +1,86 @@
-import { FlatList, Image, Pressable, Text, View } from 'react-native'
-import { dummyPosts } from '@/dummyData'
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Pressable,
+  Text,
+  View,
+} from 'react-native'
+// import { dummyPosts } from '@/dummyData'
 import PostListItem from '@/components/PostListItem'
 import { Link } from 'expo-router'
-import { useEffect, useState } from 'react'
+// import { useEffect, useState } from 'react'
 import { Post } from '@/types'
 import { supabase } from '@/lib/supabase'
-import { useAuth } from '@/providers/AuthProvider'
+// import { useAuth } from '@/providers/AuthProvider'
+import { useQuery } from '@tanstack/react-query'
+
+const fetchPosts = async (): Promise<Post[]> => {
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*, user:profiles(*)')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return data as Post[]
+}
 
 export default function HomeScreen() {
-  const [posts, setPosts] = useState<Post[]>()
-  const user = useAuth()
+  const {
+    data: posts,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['posts'],
+    queryFn: fetchPosts,
+  })
+  // const [posts, setPosts] = useState<Post[]>()
+  // const user = useAuth()
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const { data, error } = await supabase
-        .from('posts')
-        .select('*, user:profiles(*)')
-        .order('created_at', { ascending: false })
+  // useEffect(() => {
+  //   fetchPosts()
+  // }, [fetchPosts])
 
-      if (error) {
-        console.error(error)
-      }
-      setPosts(data as Post[])
-    }
+  // console.log(JSON.stringify(posts, null, 2))
 
-    fetchPosts()
-  }, [])
+  if (isLoading) {
+    return (
+      <View className='flex-1 justify-center items-center bg-black'>
+        <ActivityIndicator size='large' color='white' />
+      </View>
+    )
+  }
 
-  console.log(JSON.stringify(posts, null, 2))
+  // if (error) {
+  //   return (
+  //     <View className='flex-1 justify-center items-center bg-black'>
+  //       <Text className='text-white text-2xl font-bold'>
+  //         Something went wrong
+  //       </Text>
+  //       <Text className='text-red-500  text-lg mt-2'>{error.message}</Text>
+  //     </View>
+  //   )
+  // }
+
+  if (error) {
+    return (
+      <View className='flex-1 justify-center items-center bg-black px-6'>
+        <View className='items-center'>
+          <Text className='text-4xl'>⚠️</Text>
+          <Text className='text-white text-2xl font-bold text-center mb-2'>
+            Oops! Something went wrong
+          </Text>
+          <Text className='text-neutral-400 text-base text-center mb-6 leading-6'>
+            {error.message || 'We encountered an issue loading your feed.'}
+          </Text>
+        </View>
+      </View>
+    )
+  }
+
   return (
     <FlatList
       data={posts}
