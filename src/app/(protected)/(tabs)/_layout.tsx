@@ -1,9 +1,24 @@
 import { Octicons } from '@expo/vector-icons'
 import { Tabs } from 'expo-router'
+import { BlurView } from 'expo-blur'
 
 export default function TabsLayout() {
   return (
-    <Tabs screenOptions={{ tabBarShowLabel: false, headerTitleAlign: 'center' }}>
+    <Tabs
+      screenOptions={{
+        tabBarShowLabel: false,
+        headerTitleAlign: 'center',
+        tabBarStyle: {
+          backgroundColor: 'transparent',
+          borderTopWidth: 0,
+          elevation: 0,
+          position: 'absolute',
+        },
+        tabBarBackground: () => (
+          <BlurView tint='regular' intensity={80} style={{ flex: 1 }} />
+        ),
+      }}
+    >
       <Tabs.Screen
         name='index'
         options={{

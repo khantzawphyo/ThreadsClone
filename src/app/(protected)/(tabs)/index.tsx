@@ -98,9 +98,7 @@ export default function HomeScreen() {
               <Text className='text-white font-semibold text-sm mb-1'>
                 {'username'}
               </Text>
-              <Text className='text-neutral-500 text-base'>
-                What's on your mind?'
-              </Text>
+              <Text className='text-neutral-500 text-base'>What's new?</Text>
             </View>
           </Pressable>
         </Link>
