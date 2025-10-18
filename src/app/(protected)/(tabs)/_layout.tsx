@@ -1,6 +1,6 @@
 import { Octicons } from '@expo/vector-icons'
-import { Tabs } from 'expo-router'
-import { BlurView } from 'expo-blur'
+import { router, Tabs } from 'expo-router'
+import { View } from 'react-native'
 
 export default function TabsLayout() {
   return (
@@ -9,14 +9,9 @@ export default function TabsLayout() {
         tabBarShowLabel: false,
         headerTitleAlign: 'center',
         tabBarStyle: {
-          backgroundColor: 'transparent',
-          borderTopWidth: 0,
-          elevation: 0,
-          position: 'absolute',
+          paddingTop: 10,
+          paddingBottom: 5,
         },
-        tabBarBackground: () => (
-          <BlurView tint='regular' intensity={80} style={{ flex: 1 }} />
-        ),
       }}
     >
       <Tabs.Screen
@@ -39,6 +34,23 @@ export default function TabsLayout() {
           tabBarIcon: ({ size, color }) => (
             <Octicons name='search' size={size} color={color} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name='new-placeholder'
+        options={{
+          title: 'New Thread',
+          tabBarIcon: ({ size, color }) => (
+            <View className='w-14 h-12 rounded-xl bg-neutral-800 justify-center items-center'>
+              <Octicons name='plus' size={size} color={color} />
+            </View>
+          ),
+        }}
+        listeners={{
+          tabPress: (e) => {
+            e.preventDefault()
+            router.push('/new')
+          },
         }}
       />
       <Tabs.Screen

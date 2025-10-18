@@ -1,5 +1,9 @@
-import { Text } from 'react-native'
+import { Text, View } from 'react-native'
 
 export default function NotificationsScreen() {
-  return <Text>Notifications</Text>
+  return (
+    <View className='flex-1 items-center justify-center'>
+      <Text className='text-2xl text-white font-bold'>Notifications</Text>
+    </View>
+  )
 }
